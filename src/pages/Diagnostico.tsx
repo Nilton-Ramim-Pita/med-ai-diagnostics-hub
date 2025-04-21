@@ -13,7 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { authService } from "@/services/authService";
 import { symptoms, generateDiagnosis, PatientData, Diagnosis } from "@/services/diagnosticService";
 import { generateDiagnosisPDF } from "@/services/pdfService";
-import { FilePdf, LogOut } from "lucide-react";
+import { FileText, LogOut } from "lucide-react";
 import ChatDiagnostic from "@/components/ChatDiagnostic";
 
 const Diagnostico = () => {
@@ -286,7 +286,7 @@ const Diagnostico = () => {
                       onClick={handleExportPDF}
                       className="border-medical-purple text-medical-purple hover:bg-medical-purple hover:text-white"
                     >
-                      <FilePdf size={18} className="mr-2" />
+                      <FileText size={18} className="mr-2" />
                       Exportar em PDF
                     </Button>
                   </CardFooter>
@@ -301,3 +301,4 @@ const Diagnostico = () => {
 };
 
 export default Diagnostico;
+
