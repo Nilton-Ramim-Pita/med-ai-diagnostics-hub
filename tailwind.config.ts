@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -24,6 +25,14 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				medical: {
+					purple: '#9b87f5',
+					blue: '#1EAEDB',
+					dark: '#1A1F2C',
+					light: '#F1F1F1',
+					secondary: '#7E69AB',
+					soft: '#D3E4FD'
+				},
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -84,11 +93,51 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				typing: {
+					'0%': {
+						width: '0%',
+						visibility: 'hidden'
+					},
+					'100%': {
+						width: '100%'
+					}
+				},
+				blink: {
+					'50%': {
+						borderColor: 'transparent'
+					},
+					'100%': {
+						borderColor: 'white'
+					}
+				},
+				'bounce-dot': {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-5px)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				typing: 'typing 1.5s steps(40, end)',
+				'bounce-dot-1': 'bounce-dot 1s infinite 0.1s',
+				'bounce-dot-2': 'bounce-dot 1s infinite 0.2s',
+				'bounce-dot-3': 'bounce-dot 1s infinite 0.3s'
 			}
 		}
 	},
