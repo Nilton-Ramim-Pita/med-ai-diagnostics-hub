@@ -1,5 +1,5 @@
 
-// Serviço de diagnóstico aprimorado com identificação de 10 doenças populares
+// Simple diagnostic service using decision tree logic
 
 export interface PatientData {
   name: string;
@@ -23,7 +23,7 @@ export interface Diagnosis {
   recommendations: string[];
 }
 
-// Sintomas disponíveis — ampliado para cobrir mais doenças
+// Available symptoms
 export const symptoms: Symptom[] = [
   { id: 'fever', name: 'Febre', selected: false },
   { id: 'cough', name: 'Tosse', selected: false },
@@ -36,76 +36,52 @@ export const symptoms: Symptom[] = [
   { id: 'muscle_pain', name: 'Dor muscular', selected: false },
   { id: 'sore_throat', name: 'Dor de garganta', selected: false },
   { id: 'runny_nose', name: 'Coriza', selected: false },
-  { id: 'diarrhea', name: 'Diarreia', selected: false },
-  { id: 'joint_pain', name: 'Dor nas articulações', selected: false },
-  { id: 'loss_of_smell', name: 'Perda de olfato', selected: false },
-  { id: 'skin_rash', name: 'Manchas na pele', selected: false },
-  { id: 'high_blood_pressure', name: 'Pressão alta', selected: false },
-  { id: 'disorientation', name: 'Desorientação', selected: false },
-  { id: 'short_breath', name: 'Fôlego curto', selected: false },
-  { id: 'productive_cough', name: 'Tosse com catarro', selected: false },
-  { id: 'wheezing', name: 'Chiado no peito', selected: false }
+  { id: 'diarrhea', name: 'Diarreia', selected: false }
 ];
 
-// Árvore de decisão — 10 diagnósticos
+// Decision tree for diagnosis
 export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
-  // Gripe
+  // Flu diagnosis
   if (
     selectedSymptoms.includes('fever') &&
     selectedSymptoms.includes('cough') &&
     (selectedSymptoms.includes('muscle_pain') || selectedSymptoms.includes('fatigue'))
   ) {
     return {
-      condition: 'Gripe (Influenza)',
-      confidence: 90,
-      description: 'Febre alta, tosse, dores no corpo e fadiga são típicos de gripe. Normalmente, o quadro é autolimitado.',
+      condition: 'Gripe',
+      confidence: 85,
+      description: 'Os sintomas apresentados são consistentes com um quadro de gripe. O vírus influenza é caracterizado por febre, tosse, dores no corpo e fadiga.',
       recommendations: [
-        'Repouso e hidratação',
-        'Analgesia e antitérmicos sob orientação',
-        'Observar evolução (melhora em 7 dias esperada)',
-        'Evitar contato com outros'
+        'Repouso adequado',
+        'Hidratação frequente',
+        'Medicamentos para reduzir febre (sob orientação médica)',
+        'Monitoramento dos sintomas por 3-5 dias',
+        'Evitar contato com outras pessoas para prevenir contágio'
       ]
     };
   }
-
-  // COVID-19
+  
+  // COVID-19 diagnosis
   if (
     selectedSymptoms.includes('fever') &&
     selectedSymptoms.includes('breathing_difficulty') &&
-    (selectedSymptoms.includes('cough') || selectedSymptoms.includes('loss_of_smell') || selectedSymptoms.includes('fatigue'))
+    (selectedSymptoms.includes('cough') || selectedSymptoms.includes('fatigue'))
   ) {
     return {
       condition: 'COVID-19',
-      confidence: 95,
-      description: 'Conjunto de febre, tosse, falta de ar, fadiga ou perda de olfato são indicativos da COVID-19.',
+      confidence: 75,
+      description: 'Os sintomas sugerem possível COVID-19. A combinação de febre, dificuldade respiratória e outros sintomas são indicadores desta condição.',
       recommendations: [
-        'Teste para COVID-19 e isolamento',
-        'Monitorar saturação de oxigênio',
-        'Buscar pronto atendimento se piora respiratória'
+        'Realizar teste para COVID-19 imediatamente',
+        'Isolamento social imediato',
+        'Monitorar níveis de oxigênio com oxímetro',
+        'Buscar atendimento médico se sintomas respiratórios piorarem',
+        'Hidratação e repouso são essenciais'
       ]
     };
   }
-
-  // Pneumonia
-  if (
-    selectedSymptoms.includes('fever') &&
-    selectedSymptoms.includes('productive_cough') &&
-    selectedSymptoms.includes('breathing_difficulty')
-  ) {
-    return {
-      condition: 'Pneumonia',
-      confidence: 85,
-      description: 'Quadro de febre, tosse com catarro e dificuldade de respirar sugere pneumonia.',
-      recommendations: [
-        'Avaliação médica urgente',
-        'Realizar radiografia de tórax',
-        'Antibioticoterapia se confirmada',
-        'Monitoramento em ambiente hospitalar, se grave'
-      ]
-    };
-  }
-
-  // Resfriado comum
+  
+  // Common cold diagnosis
   if (
     selectedSymptoms.includes('runny_nose') &&
     selectedSymptoms.includes('sore_throat') &&
@@ -113,133 +89,67 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
   ) {
     return {
       condition: 'Resfriado Comum',
-      confidence: 95,
-      description: 'Coriza, dor de garganta e tosse leve são característicos de resfriados virais.',
-      recommendations: [
-        'Repouso',
-        'Ingestão de líquidos',
-        'Descongestionantes se necessário'
-      ]
-    };
-  }
-
-  // Sinusite
-  if (
-    selectedSymptoms.includes('headache') &&
-    selectedSymptoms.includes('runny_nose') &&
-    selectedSymptoms.includes('sore_throat')
-  ) {
-    return {
-      condition: 'Sinusite Aguda',
-      confidence: 80,
-      description: 'Dor de cabeça frontal, secreção nasal e dor de garganta sugerem sinusite.',
-      recommendations: [
-        'Lavagem nasal com soro',
-        'Analgesia',
-        'Procurar serviço médico se sintomas persistirem'
-      ]
-    };
-  }
-
-  // Dengue
-  if (
-    selectedSymptoms.includes('fever') &&
-    selectedSymptoms.includes('headache') &&
-    selectedSymptoms.includes('joint_pain') &&
-    selectedSymptoms.includes('skin_rash')
-  ) {
-    return {
-      condition: 'Dengue',
       confidence: 90,
-      description: 'Febre alta, dor de cabeça, dor nas articulações e manchas podem indicar dengue.',
+      description: 'Os sintomas são característicos de um resfriado comum, causado por rinovírus ou outros vírus respiratórios.',
       recommendations: [
-        'Procurar assistência médica para confirmação',
-        'Monitorar sinais de alarme (dor abdominal, vômitos persistentes, sangramentos)',
-        'Repouso e hidratação intensa'
+        'Repouso quando necessário',
+        'Ingestão adequada de líquidos',
+        'Medicamentos para alívio sintomático como descongestionantes (se necessário)',
+        'Higienização frequente das mãos para evitar propagação',
+        'Monitoramento de sintomas por 7-10 dias'
       ]
     };
   }
-
-  // Enfarte agudo do miocárdio
-  if (
-    selectedSymptoms.includes('chest_pain') &&
-    selectedSymptoms.includes('fatigue') &&
-    (selectedSymptoms.includes('high_blood_pressure') || selectedSymptoms.includes('breathing_difficulty'))
-  ) {
-    return {
-      condition: 'Infarto Agudo do Miocárdio',
-      confidence: 98,
-      description: 'Dor no peito intensa, cansaço e fatores de risco sugerem infarto. Trata-se de emergência.',
-      recommendations: [
-        'Procurar atendimento de emergência imediatamente (SAMU 192)',
-        'Evitar esforços',
-        'Monitorar sinais vitais'
-      ]
-    };
-  }
-
-  // Bronquite
-  if (
-    selectedSymptoms.includes('cough') &&
-    selectedSymptoms.includes('wheezing') &&
-    selectedSymptoms.includes('fatigue')
-  ) {
-    return {
-      condition: 'Bronquite Aguda',
-      confidence: 85,
-      description: 'Tosse persistente, chiado no peito e cansaço sugerem bronquite.',
-      recommendations: [
-        'Evitar exposição a fumaça e irritantes',
-        'Broncodilatadores se prescritos',
-        'Hidratação adequada'
-      ]
-    };
-  }
-
-  // Asma
-  if (
-    selectedSymptoms.includes('wheezing') &&
-    selectedSymptoms.includes('breathing_difficulty') &&
-    selectedSymptoms.includes('chest_pain')
-  ) {
-    return {
-      condition: 'Asma Aguda',
-      confidence: 92,
-      description: 'Crises de chiado, falta de ar e dor no peito sugerem asma. Procure alívio rápido.',
-      recommendations: [
-        'Uso de bombinha/broncodilatador',
-        'Retirar-se de ambientes com poeira ou fumaça',
-        'Buscar atendimento se não melhorar em minutos'
-      ]
-    };
-  }
-
-  // Gastroenterite
+  
+  // Gastroenteritis diagnosis
   if (
     (selectedSymptoms.includes('nausea') || selectedSymptoms.includes('vomiting')) &&
     selectedSymptoms.includes('diarrhea')
   ) {
     return {
-      condition: 'Gastroenterite Aguda',
+      condition: 'Gastroenterite',
       confidence: 80,
-      description: 'Quadro de náusea, vômito e diarreia são típicos de gastroenterites.',
+      description: 'Os sintomas indicam um quadro de gastroenterite, possivelmente de origem viral ou bacteriana.',
       recommendations: [
-        'Hidratação oral freqüente',
-        'Evitar alimentos gordurosos/laticínios',
-        'Observar sinais de desidratação'
+        'Hidratação constante para repor líquidos perdidos',
+        'Dieta leve e facilmente digerível',
+        'Evitar laticínios e alimentos gordurosos',
+        'Medicamentos antieméticos se prescritos',
+        'Buscar atendimento médico se houver desidratação severa'
       ]
     };
   }
-
-  // Genérico/indefinido
+  
+  // Heart-related issues
+  if (
+    selectedSymptoms.includes('chest_pain') &&
+    (selectedSymptoms.includes('breathing_difficulty') || selectedSymptoms.includes('fatigue'))
+  ) {
+    return {
+      condition: 'Problema Cardíaco',
+      confidence: 65,
+      description: 'A combinação de dor torácica com outros sintomas pode indicar um problema cardíaco que requer atenção médica imediata.',
+      recommendations: [
+        'Buscar atendimento médico de emergência',
+        'Evitar esforços físicos',
+        'Monitoramento de pressão arterial e frequência cardíaca',
+        'Não auto-medicar',
+        'Realização de exames cardíacos específicos'
+      ]
+    };
+  }
+  
+  // Generic response for uncertain cases
   return {
     condition: 'Condição Indefinida',
     confidence: 40,
-    description: 'A combinação de sintomas não aponta claramente um diagnóstico. Recomenda-se avaliação médica presencial.',
+    description: 'A combinação de sintomas apresentada não corresponde claramente a um diagnóstico específico em nossa base de conhecimento.',
     recommendations: [
-      'Consulta médica presencial',
-      'Monitorização de sintomas',
-      'Repouso e hidratação'
+      'Consulta médica para avaliação mais detalhada',
+      'Monitoramento da evolução dos sintomas',
+      'Registro detalhado de novos sintomas que possam surgir',
+      'Evitar automedicação',
+      'Repouso e hidratação adequados'
     ]
   };
 };
