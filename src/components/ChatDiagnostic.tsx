@@ -93,8 +93,8 @@ const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ isLoading, diagnosis })
           <div className="chat-message">
             <h3 className="text-lg font-semibold">
               <span className="text-medical-purple">Diagnóstico: </span>
-              {typedDiagnosis}
-              {typedDiagnosis.length < diagnosis.condition.length && (
+              {typedDiagnosis || ''}
+              {typedDiagnosis.length < (diagnosis?.condition?.length || 0) && (
                 <span className="animate-pulse">|</span>
               )}
             </h3>
@@ -123,14 +123,14 @@ const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ isLoading, diagnosis })
           
           <div className="chat-description">
             <p className="text-gray-700">
-              {typedDescription}
-              {typedDescription.length < diagnosis.description.length && (
+              {typedDescription || ''}
+              {typedDescription.length < (diagnosis?.description?.length || 0) && (
                 <span className="animate-pulse">|</span>
               )}
             </p>
           </div>
           
-          {showRecommendations && (
+          {showRecommendations && diagnosis.recommendations && diagnosis.recommendations.length > 0 && (
             <div 
               className="chat-recommendations transition-all duration-500"
               style={{ 
@@ -144,7 +144,7 @@ const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ isLoading, diagnosis })
               <ul className="list-disc pl-5 space-y-1">
                 {diagnosis.recommendations.map((recommendation, index) => (
                   <li key={index} className="text-gray-700">
-                    {recommendation}
+                    {recommendation || ''}
                   </li>
                 ))}
               </ul>
