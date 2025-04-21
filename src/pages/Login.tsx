@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
@@ -128,11 +127,6 @@ const Login = () => {
                 >
                   {isLoading ? "Autenticando..." : "Entrar"}
                 </Button>
-              </div>
-              
-              <div className="mt-4 text-xs text-center text-gray-500">
-                <p>Para testes use: dr.silva / senha123</p>
-                <p>ou: enfermeira.santos / senha123</p>
               </div>
             </form>
           </CardContent>
