@@ -20,6 +20,7 @@ const DiagnosisResultPanel: React.FC<DiagnosisResultPanelProps> = ({
   onExportPDF
 }) => {
   if (!showChatDiagnostic) return null;
+  
   return (
     <Card className="bg-white shadow-md">
       <CardHeader>
