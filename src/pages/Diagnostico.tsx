@@ -1,15 +1,11 @@
 
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { authService } from "@/services/authService";
 import { symptoms, generateDiagnosis, PatientData, Diagnosis } from "@/services/diagnosticService";
 import { generateDiagnosisPDF } from "@/services/pdfService";
 import PatientDataPanel from "@/components/PatientDataPanel";
 import SymptomsPanel from "@/components/SymptomsPanel";
 import DiagnosisResultPanel from "@/components/DiagnosisResultPanel";
-import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
 
 const Diagnostico = () => {
   const [patientData, setPatientData] = useState<PatientData>({
@@ -26,13 +22,6 @@ const Diagnostico = () => {
   const [showChatDiagnostic, setShowChatDiagnostic] = useState(false);
 
   const { toast } = useToast();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!authService.isAuthenticated()) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   const handlePatientDataChange = (field: keyof PatientData, value: string | number) => {
     setPatientData(prev => ({
@@ -76,7 +65,7 @@ const Diagnostico = () => {
       const result = generateDiagnosis(selectedSymptoms);
       setDiagnosis(result);
       setIsGeneratingDiagnosis(false);
-    }, 3000);
+    }, 1500);
   };
 
   const handleExportPDF = () => {
@@ -92,26 +81,11 @@ const Diagnostico = () => {
     });
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    navigate("/");
-  };
-
-  const currentUser = authService.getCurrentUser();
-
   return (
     <div className="min-h-screen bg-medical-light">
       <header className="bg-medical-purple text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto">
           <h1 className="text-xl font-bold">Sistema de Diagnóstico Médico</h1>
-          <div className="flex items-center space-x-4">
-            <span>
-              {currentUser?.role} {currentUser?.username}
-            </span>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut size={18} className="mr-1" /> Sair
-            </Button>
-          </div>
         </div>
       </header>
       <main className="container mx-auto py-8 px-4">
@@ -136,6 +110,11 @@ const Diagnostico = () => {
           </div>
         </div>
       </main>
+      <footer className="bg-medical-purple/10 py-4 text-center text-sm text-gray-600">
+        <div className="container mx-auto">
+          © {new Date().getFullYear()} Sistema de Diagnóstico Médico - Para uso educacional
+        </div>
+      </footer>
     </div>
   );
 };
