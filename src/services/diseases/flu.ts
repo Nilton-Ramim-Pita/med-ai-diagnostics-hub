@@ -22,5 +22,3 @@ export const checkForFlu = (selectedSymptoms: string[]): Diagnosis | null => {
   }
   return null;
 };
-
-// Add more disease-specific checks as needed
