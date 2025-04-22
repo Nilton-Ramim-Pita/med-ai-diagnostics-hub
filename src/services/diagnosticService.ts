@@ -1,52 +1,10 @@
-// Simple diagnostic service using decision tree logic
 
-export interface PatientData {
-  name: string;
-  age: number;
-  sex: "Masculino" | "Feminino" | "Outro";
-  weight: number;
-  height: number;
-  notes: string;
-}
+import { Diagnosis } from "@/types/diagnostic";
+import { symptoms } from "@/data/symptoms";
 
-export interface Symptom {
-  id: string;
-  name: string;
-  selected: boolean;
-}
+export { symptoms };
+export type { PatientData, Symptom, Diagnosis } from "@/types/diagnostic";
 
-export interface Diagnosis {
-  condition: string;
-  confidence: number;
-  description: string;
-  recommendations: string[];
-}
-
-// Ampliando sintomas para abranger mais doenças
-export const symptoms: Symptom[] = [
-  { id: 'fever', name: 'Febre', selected: false },
-  { id: 'cough', name: 'Tosse', selected: false },
-  { id: 'headache', name: 'Dor de cabeça', selected: false },
-  { id: 'chest_pain', name: 'Dor no peito', selected: false },
-  { id: 'nausea', name: 'Náusea', selected: false },
-  { id: 'vomiting', name: 'Vômito', selected: false },
-  { id: 'breathing_difficulty', name: 'Dificuldade para respirar', selected: false },
-  { id: 'fatigue', name: 'Cansaço', selected: false },
-  { id: 'muscle_pain', name: 'Dor muscular', selected: false },
-  { id: 'sore_throat', name: 'Dor de garganta', selected: false },
-  { id: 'runny_nose', name: 'Coriza', selected: false },
-  { id: 'diarrhea', name: 'Diarreia', selected: false },
-  { id: 'rash', name: 'Manchas na pele', selected: false },
-  { id: 'joint_pain', name: 'Dor nas articulações', selected: false },
-  { id: 'abdominal_pain', name: 'Dor abdominal', selected: false },
-  { id: 'weight_loss', name: 'Perda de peso', selected: false },
-  { id: 'night_sweats', name: 'Suores noturnos', selected: false },
-  { id: 'itching', name: 'Coceira', selected: false },
-  { id: 'urinary_pain', name: 'Dor ao urinar', selected: false },
-  { id: 'blood_urine', name: 'Sangue na urina', selected: false }
-];
-
-// IA expandida para reconocer 10+ doenças
 export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
   // 1. Gripe
   if (
@@ -67,6 +25,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 2. COVID-19
   if (
     selectedSymptoms.includes('fever') &&
@@ -86,6 +45,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 3. Resfriado comum
   if (
     selectedSymptoms.includes('runny_nose') &&
@@ -103,6 +63,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 4. Gastroenterite
   if (
     (selectedSymptoms.includes('nausea') || selectedSymptoms.includes('vomiting')) &&
@@ -121,6 +82,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 5. Alergia/dermatite
   if (
     selectedSymptoms.includes('rash') &&
@@ -138,6 +100,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 6. Infecção urinária (ITU)
   if (
     selectedSymptoms.includes('urinary_pain') &&
@@ -155,6 +118,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 7. Dengue
   if (
     selectedSymptoms.includes('fever') &&
@@ -174,6 +138,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 8. Tuberculose
   if (
     selectedSymptoms.includes('cough') &&
@@ -192,6 +157,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 9. Infarto agudo do miocárdio
   if (
     selectedSymptoms.includes('chest_pain') &&
@@ -210,6 +176,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // 10. Hepatite Viral
   if (
     selectedSymptoms.includes('nausea') &&
@@ -230,6 +197,7 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
       ]
     };
   }
+
   // Se não atender a nenhum diagnóstico específico
   return {
     condition: 'Condição Indefinida',
