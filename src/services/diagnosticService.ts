@@ -30,12 +30,12 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
     checkForHepatitis(selectedSymptoms)
   ].filter(diagnosis => diagnosis !== null);
 
-  // If no specific diagnosis is found, return default
+  // Se não encontrou um diagnóstico específico, retorna o padrão
   if (possibleDiagnoses.length === 0) {
     return {
       condition: 'Condição Indefinida',
-      confidence: 40,
-      description: 'Os sintomas não correspondem claramente a um diagnóstico específico em nossa base de conhecimento médico digital. Acompanhamento clínico é recomendado.',
+      confidence: 88, // Aumentado para 88% conforme solicitado
+      description: 'Baseado nos sintomas apresentados, não foi possível determinar uma condição específica com alta precisão. Recomendamos uma avaliação médica presencial para diagnóstico completo.',
       recommendations: [
         'Procure avaliação médica presencial',
         'Registre evolução dos sintomas',
@@ -45,8 +45,15 @@ export const generateDiagnosis = (selectedSymptoms: string[]): Diagnosis => {
     };
   }
 
-  // Return the diagnosis with the highest confidence
-  return possibleDiagnoses.reduce((prev, current) => {
+  // Encontra o diagnóstico com maior confiança
+  let bestDiagnosis = possibleDiagnoses.reduce((prev, current) => {
     return (current && current.confidence > prev.confidence) ? current : prev;
   }, possibleDiagnoses[0]!);
+
+  // Ajusta a confiança para pelo menos 88%
+  if (bestDiagnosis.confidence < 88) {
+    bestDiagnosis.confidence = Math.max(88, bestDiagnosis.confidence);
+  }
+
+  return bestDiagnosis;
 };

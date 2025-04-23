@@ -63,6 +63,12 @@ const Diagnostico = () => {
 
     setTimeout(() => {
       const result = generateDiagnosis(selectedSymptoms);
+      
+      // Aumentando a confiança para pelo menos 88% conforme solicitado
+      if (result.confidence < 88) {
+        result.confidence = Math.max(88, result.confidence);
+      }
+      
       setDiagnosis(result);
       setIsGeneratingDiagnosis(false);
     }, 1500);
@@ -100,6 +106,7 @@ const Diagnostico = () => {
               onSymptomToggle={handleSymptomToggle}
               onGenerateDiagnosis={handleGenerateDiagnosis}
               isGeneratingDiagnosis={isGeneratingDiagnosis}
+              setSelectedSymptoms={setSelectedSymptoms}
             />
             <DiagnosisResultPanel
               showChatDiagnostic={showChatDiagnostic}
