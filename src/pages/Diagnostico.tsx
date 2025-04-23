@@ -7,10 +7,11 @@ const Diagnostico = () => {
   const { toast } = useToast();
 
   return (
-    <div className="min-h-screen bg-medical-light">
-      <header className="bg-medical-purple text-white p-4 shadow-md">
+    <div className="min-h-screen bg-gradient-to-b from-medical-light to-white">
+      <header className="bg-medical-purple text-white p-4 shadow-lg">
         <div className="container mx-auto">
           <h1 className="text-xl font-bold">Sistema de Diagnóstico Médico</h1>
+          <p className="text-sm text-white/80">Análise inteligente de sintomas para sugestão de diagnóstico</p>
         </div>
       </header>
       <main className="container mx-auto py-8 px-4">
