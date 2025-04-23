@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { generateDiagnosis, Diagnosis } from "@/services/diagnosticService";
