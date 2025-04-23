@@ -22,20 +22,27 @@ const symptomKeywords: Record<string, string[]> = {
   'night_sweats': ['suores noturnos', 'suando de noite', 'acordando suado', 'transpiração noturna', 'suor durante a noite', 'lençol molhado de suor'],
   'itching': ['coceira', 'prurido', 'coçando', 'pele coçando', 'comichão', 'irritação na pele', 'urticária', 'formigamento'],
   'urinary_pain': ['dor ao urinar', 'ardência ao urinar', 'disúria', 'ardor ao fazer xixi', 'queimação ao urinar', 'dor na bexiga', 'desconforto urinário'],
-  'blood_urine': ['sangue na urina', 'urina com sangue', 'hematúria', 'micção sanguinolenta', 'urina avermelhada']
+  'blood_urine': ['sangue na urina', 'urina com sangue', 'hematúria', 'micção sanguinolenta', 'urina avermelhada'],
+  'loss_of_smell': ['perda de olfato', 'não sinto cheiro', 'sem olfato', 'anosmia', 'não consigo sentir cheiros', 'perdi o olfato'],
+  'loss_of_taste': ['perda de paladar', 'não sinto gosto', 'sem paladar', 'ageusia', 'não consigo sentir sabores', 'perdi o paladar'],
+  'sputum': ['catarro', 'secreção', 'escarro', 'muco', 'expectoração'],
+  'chills': ['calafrios', 'tremores', 'tremedeira', 'arrepios', 'sensação de frio', 'tremendo de frio'],
+  'sweating': ['suor', 'suando', 'transpiração', 'sudorese'],
+  'confusion': ['confusão', 'desorientação', 'confuso', 'desorientado', 'perdido', 'sem saber onde estou'],
+  'dizzy': ['tontura', 'vertigem', 'cabeça rodando', 'zonzo', 'atordoado', 'sensação de desmaio']
 };
 
 // Extended intensity and duration patterns
 const intensityPatterns: Record<string, string[]> = {
-  'high': ['muito', 'forte', 'intensa', 'grave', 'severa', 'insuportável', 'extrema'],
-  'medium': ['moderada', 'considerável', 'significativa', 'razoável'],
-  'low': ['leve', 'fraca', 'suave', 'pequena', 'pouca', 'ligeira']
+  'high': ['muito', 'forte', 'intensa', 'grave', 'severa', 'insuportável', 'extrema', 'bastante', 'demais'],
+  'medium': ['moderada', 'considerável', 'significativa', 'razoável', 'média'],
+  'low': ['leve', 'fraca', 'suave', 'pequena', 'pouca', 'ligeira', 'um pouco']
 };
 
 const durationPatterns: Record<string, string[]> = {
-  'long': ['dias', 'semanas', 'meses', 'crônica', 'persistente', 'constante', 'contínua'],
-  'medium': ['algumas horas', 'desde ontem', 'desde anteontem', 'recente', 'há pouco tempo'],
-  'recent': ['agora', 'acabou de', 'começou', 'recém', 'súbito', 'repentino']
+  'long': ['dias', 'semanas', 'meses', 'crônica', 'persistente', 'constante', 'contínua', 'há muito tempo', 'faz tempo'],
+  'medium': ['algumas horas', 'desde ontem', 'desde anteontem', 'recente', 'há pouco tempo', 'alguns dias'],
+  'recent': ['agora', 'acabou de', 'começou', 'recém', 'súbito', 'repentino', 'de repente']
 };
 
 // Improved symptom extraction with context awareness
@@ -56,6 +63,28 @@ export const extractSymptomsFromText = (text: string): {
       extractedSymptoms.push(symptomId);
     }
   });
+
+  // Direct matching for single quotes or quoted symptom names
+  const quotedPattern = /'([^']+)'/g;
+  const matches = normalizedText.match(quotedPattern);
+  if (matches) {
+    matches.forEach(match => {
+      // Remove the quotes
+      const symptomText = match.replace(/'/g, '').toLowerCase();
+      
+      // Check each symptom keyword for a match
+      Object.entries(symptomKeywords).forEach(([symptomId, keywords]) => {
+        if (keywords.some(keyword => {
+          const normalizedKeyword = keyword.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          return symptomText === normalizedKeyword || symptomText.includes(normalizedKeyword);
+        })) {
+          if (!extractedSymptoms.includes(symptomId)) {
+            extractedSymptoms.push(symptomId);
+          }
+        }
+      });
+    });
+  }
 
   // Determine intensity
   let intensity: 'high' | 'medium' | 'low' | null = null;
@@ -89,11 +118,41 @@ export const generateNaturalResponse = (
     return "Não consegui identificar sintomas específicos na sua descrição. Poderia descrever com mais detalhes o que está sentindo? Por exemplo: 'Estou com dor de cabeça e febre desde ontem'.";
   }
   
+  const symptomMap: Record<string, string> = {
+    'fever': 'febre',
+    'cough': 'tosse',
+    'headache': 'dor de cabeça',
+    'chest_pain': 'dor no peito',
+    'nausea': 'náusea',
+    'vomiting': 'vômito',
+    'breathing_difficulty': 'dificuldade para respirar',
+    'fatigue': 'cansaço',
+    'muscle_pain': 'dor muscular',
+    'sore_throat': 'dor de garganta',
+    'runny_nose': 'coriza',
+    'diarrhea': 'diarreia',
+    'rash': 'manchas na pele',
+    'joint_pain': 'dor nas articulações',
+    'abdominal_pain': 'dor abdominal',
+    'weight_loss': 'perda de peso',
+    'night_sweats': 'suores noturnos',
+    'itching': 'coceira',
+    'urinary_pain': 'dor ao urinar',
+    'blood_urine': 'sangue na urina',
+    'loss_of_smell': 'perda de olfato',
+    'loss_of_taste': 'perda de paladar',
+    'sputum': 'catarro',
+    'chills': 'calafrios',
+    'sweating': 'sudorese',
+    'confusion': 'confusão mental',
+    'dizzy': 'tontura'
+  };
+  
   const symptomNames = extractedSymptoms.map(id => {
-    const symptom = allSymptoms.find(s => s.id === id);
-    return symptom ? symptom.name.toLowerCase() : id;
+    return symptomMap[id] || id;
   });
   
+  // Analyze symptoms and prepare for diagnosis
   let response = `Identifiquei os seguintes sintomas: ${symptomNames.join(', ')}. `;
   
   // Add context based on intensity and duration
@@ -105,7 +164,12 @@ export const generateNaturalResponse = (
     response += durationContext(duration);
   }
   
-  response += '\nVou analisar esses sintomas para sugerir um possível diagnóstico.';
+  // Different responses based on number of symptoms
+  if (extractedSymptoms.length >= 3) {
+    response += '\nCom base nos sintomas relatados, estou analisando para gerar um possível diagnóstico.';
+  } else {
+    response += '\nPreciso de mais informações para um diagnóstico mais preciso. Existe algum outro sintoma que está sentindo?';
+  }
   
   return response;
 };

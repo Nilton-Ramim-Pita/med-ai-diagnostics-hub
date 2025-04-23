@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Diagnosis } from "@/services/diagnosticService";
+import { Diagnosis } from "@/types/diagnostic";
 import { cn } from "@/lib/utils";
 
 interface ChatDiagnosticProps {
@@ -74,7 +74,13 @@ const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ isLoading, diagnosis })
   }
   
   if (!diagnosis) {
-    return null;
+    return (
+      <div className="bg-gray-50 rounded-lg p-6 min-h-[200px] flex flex-col items-center justify-center">
+        <p className="text-gray-500">
+          Aguardando mais informações sobre os sintomas para gerar um diagnóstico...
+        </p>
+      </div>
+    );
   }
   
   return (
@@ -110,7 +116,7 @@ const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ isLoading, diagnosis })
                 <div 
                   className={cn(
                     "h-full rounded-full transition-all duration-1000",
-                    diagnosis.confidence >= 80 ? "bg-green-500" :
+                    diagnosis.confidence >= 88 ? "bg-green-500" :
                     diagnosis.confidence >= 60 ? "bg-yellow-500" :
                     "bg-red-500"
                   )}

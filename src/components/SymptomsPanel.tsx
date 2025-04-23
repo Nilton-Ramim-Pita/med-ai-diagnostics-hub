@@ -1,18 +1,14 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, MessageSquare } from "lucide-react";
 import { symptoms } from "@/services/diagnosticService";
 import { extractSymptomsFromText, generateNaturalResponse } from "@/services/nlpService";
 
 interface SymptomsPanelProps {
-  selectedSymptoms: string[];
-  onSymptomToggle: (symptomId: string) => void;
-  onGenerateDiagnosis: () => void;
-  isGeneratingDiagnosis: boolean;
-  setSelectedSymptoms: React.Dispatch<React.SetStateAction<string[]>>;
+  onSymptomsDetected: (symptoms: string[]) => void;
 }
 
 interface ChatMessage {
@@ -21,10 +17,7 @@ interface ChatMessage {
 }
 
 const SymptomsPanel: React.FC<SymptomsPanelProps> = ({
-  selectedSymptoms,
-  onGenerateDiagnosis,
-  isGeneratingDiagnosis,
-  setSelectedSymptoms
+  onSymptomsDetected
 }) => {
   const [chatInput, setChatInput] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
@@ -58,11 +51,8 @@ const SymptomsPanel: React.FC<SymptomsPanelProps> = ({
     // Processar o texto para extrair sintomas
     const extractionResult = extractSymptomsFromText(chatInput);
     
-    // Atualizar os sintomas selecionados
-    setSelectedSymptoms(prev => {
-      const uniqueSymptoms = new Set([...prev, ...extractionResult.symptoms]);
-      return Array.from(uniqueSymptoms);
-    });
+    // Notificar o componente pai sobre os sintomas detectados para gerar diagnóstico
+    onSymptomsDetected(extractionResult.symptoms);
     
     // Gerar resposta do assistente
     const assistantResponse = generateNaturalResponse(extractionResult, symptoms);
@@ -135,15 +125,6 @@ const SymptomsPanel: React.FC<SymptomsPanelProps> = ({
           </form>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center border-t pt-4">
-        <Button
-          className="bg-medical-purple hover:bg-medical-secondary"
-          onClick={onGenerateDiagnosis}
-          disabled={isGeneratingDiagnosis || selectedSymptoms.length === 0}
-        >
-          {isGeneratingDiagnosis ? "Processando..." : "Gerar Diagnóstico"}
-        </Button>
-      </CardFooter>
     </Card>
   );
 };

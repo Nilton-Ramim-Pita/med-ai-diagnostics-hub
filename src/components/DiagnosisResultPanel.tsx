@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { FileText } from "lucide-react";
 import ChatDiagnostic from "@/components/ChatDiagnostic";
-import { Diagnosis } from "@/services/diagnosticService";
+import { Diagnosis } from "@/types/diagnostic";
 
 interface DiagnosisResultPanelProps {
   showChatDiagnostic: boolean;
@@ -25,7 +25,7 @@ const DiagnosisResultPanel: React.FC<DiagnosisResultPanelProps> = ({
     <Card className="bg-white shadow-md">
       <CardHeader>
         <CardTitle className="text-medical-purple">
-          Resultado do Diagnóstico
+          Diagnóstico
         </CardTitle>
       </CardHeader>
       <CardContent>
