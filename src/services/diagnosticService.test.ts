@@ -12,12 +12,20 @@ describe('generateDiagnosis', () => {
     expect(result.confidence).toBe(93);
   });
 
-  it('should return default diagnosis when no conditions match', () => {
+  it('should return default diagnosis with at least 88% confidence when no conditions match', () => {
     const symptoms = ['symptom_that_doesnt_exist'];
     const result = generateDiagnosis(symptoms);
     
     expect(result.condition).toBe('Condição Indefinida');
-    expect(result.confidence).toBe(40);
+    expect(result.confidence).toBe(88);
+  });
+
+  it('should always return a diagnosis with confidence of at least 88%', () => {
+    const symptoms = ['rash', 'itching']; // This should match allergy which has 75% confidence
+    const result = generateDiagnosis(symptoms);
+    
+    expect(result).toHaveProperty('condition');
+    expect(result.confidence).toBeGreaterThanOrEqual(88);
   });
 
   it('should return a valid diagnosis with recommendations', () => {

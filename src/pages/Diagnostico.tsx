@@ -51,8 +51,8 @@ const Diagnostico = () => {
     }
     if (selectedSymptoms.length === 0) {
       toast({
-        title: "Nenhum sintoma selecionado",
-        description: "Por favor, selecione pelo menos um sintoma",
+        title: "Nenhum sintoma identificado",
+        description: "Por favor, descreva seus sintomas para que possamos analisar",
         variant: "destructive"
       });
       return;
@@ -64,7 +64,7 @@ const Diagnostico = () => {
     setTimeout(() => {
       const result = generateDiagnosis(selectedSymptoms);
       
-      // Aumentando a confiança para pelo menos 88% conforme solicitado
+      // Garantindo que a confiança seja pelo menos 88%
       if (result.confidence < 88) {
         result.confidence = Math.max(88, result.confidence);
       }
